@@ -1,0 +1,60 @@
+<div class='w-75 mx-auto'>
+	<h4 class="texr-center">Actualizar Datos</h4>
+	<form id='formUpdateAnime'>
+		<label class='form-label' for='updateId'>Id</label>
+		<input class='form-control mb-3' type='text' name='updateId' id='updateId' value='{{updateAnime.id}}' required
+			disabled />
+		<label class='form-label' for='updateNombre'>Nombre</label>
+		<input class='form-control mb-3' type='text' name='updateNombre' id='updateNombre' value='{{updateAnime.nombre}}'
+			required />
+		<label for='updateGenero'>Genero</label>
+		<input class='form-control mb-3' type='text' name='updateGenero' id='updateGenero' value='{{updateAnime.genero}}'
+			required />
+		<label for='updateYear'>Año</label>
+		<input class='form-control mb-3' type='text' name='updateYear' id='updateYear' value='{{updateAnime.year}}'
+			required />
+		<label for='updateAutor'>Autor</label>
+		<input class='form-control mb-3' type='text' name='updateAutor' id='updateAutor' value='{{updateAnime.autor}}'
+			required />
+		<button class='btn btn-primary' type='submit'>Crear</button>
+	</form>
+</div>
+<script>
+	let formUpdateAnime = document.getElementById("formUpdateAnime")
+
+	formUpdateAnime.addEventListener("submit", async (event) => {
+		event.preventDefault()
+		console.log("Capturando formulario update")
+		console.log(updateId.value)
+		try {
+			const raw = JSON.stringify({
+				"id": updateId.value,
+				"nombre": updateNombre.value,
+				"genero": updateGenero.value,
+				"year": updateYear.value,
+				"autor": updateAutor.value
+			})
+
+			const myHeaders = new Headers()
+			myHeaders.append("Content-Type", "application/json")
+
+			let response = await fetch(`/anime/${updateId.value}`, {
+				method: "PUT",
+				headers: myHeaders,
+				body: raw,
+				redirect: 'follow'
+			})
+
+			let data = await response.json()
+			if (data.code == 200) {
+				alert("anime actualizado con éxito.")
+				formUpdateAnime.reset()
+				location.reload()
+			} else {
+				throw new Error("Error al actualizar los datos en la BD.")
+			}
+		} catch (error) {
+			alert(error.message)
+		}
+	})
+</script>

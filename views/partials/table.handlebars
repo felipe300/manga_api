@@ -35,7 +35,7 @@
 			<td>{{this.genero}}</td>
 			<td>{{this.year}}</td>
 			<td>{{this.autor}}</td>
-			<td><a class="btn btn-warning" href="/animes/{{this.id}}">Actualizar</a></td>
+			<td><a class="btn btn-warning" href="/anime/{{this.nombre}}">Actualizar</a></td>
 			<td><button class="btn btn-danger" onclick="deleteAnime('{{this.id}}')">Eliminar</button></td>
 		</tr>
 		{{/each}}
@@ -77,4 +77,33 @@
 			alert(error.message)
 		}
 	})
+
+	async function deleteAnime (id) {
+		console.log("delete anime " + id)
+		try {
+			const raw = JSON.stringify({
+				"id": id,
+			})
+
+			const myHeaders = new Headers()
+			myHeaders.append("Content-Type", "application/json")
+
+			let response = await fetch(`/anime/${id}`, {
+				method: "DELETE",
+				headers: myHeaders,
+				body: raw,
+				redirect: 'follow'
+			})
+
+			let data = await response.json()
+			if (data.code == 200) {
+				alert("Anime eliminado con éxito.")
+				location.reload()
+			} else {
+				throw new Error("Error al eliminar los datos en la BD.")
+			}
+		} catch (error) {
+			alert(error.message)
+		}
+	}
 </script>
