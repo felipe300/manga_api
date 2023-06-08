@@ -1,9 +1,10 @@
-// let objetos = Object.entries(objeto).map((manga, index) => {
-// 	let objeto = manga[1]
-// 	objeto.id = manga[0]
-// 	return objeto
+const express = require("express")
+const cors = require("cors")
 
-// })
+const app = express()
+const PORT = process.env.PORT || 3000
 
-// console.log(objetos)
+app.use(express.json())
+app.use(cors())
 
+app.listen(PORT, () => console.log(`Server running on port => ${PORT} 🔥🔥🔥`))
