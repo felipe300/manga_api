@@ -1,0 +1,80 @@
+<section>
+	<div class="w-75 mx-auto">
+		<h2 class="text-center">Formulario nuevo Anime</h2>
+		<form id="formAgregarAnime">
+			<label for="agregarNombre" class="form-label">Nombre</label>
+			<input type="text" name="agregarNombre" id="agregarNombre" class="form-control" required>
+			<label for="agregarGenero" class="form-label">Genero</label>
+			<input type="text" name="agregarGenero" id="agregarGenero" class="form-control" required>
+			<label for="agregarYear" class="form-label">Año</label>
+			<input type="text" name="agregarYear" id="agregarYear" class="form-control" required>
+			<label for="agregarAutor" class="form-label">Autor</label>
+			<input type="text" name="agregarAutor" id="agregarAutor" class="form-control" required>
+			<input type="submit" value="Agregar" class="btn btn-primary">
+		</form>
+	</div>
+</section>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col">Id</th>
+			<th scope="col">Nombre</th>
+			<th scope="col">Genero</th>
+			<th scope="col">Año</th>
+			<th scope="col">Autor</th>
+			<th scope="col">Actualizar</th>
+			<th scope="col">Eliminar</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each data}}
+		<tr>
+			<th scope="row">{{this.id}}</th>
+			<td>{{this.nombre}}</td>
+			<td>{{this.genero}}</td>
+			<td>{{this.year}}</td>
+			<td>{{this.autor}}</td>
+			<td><a class="btn btn-warning" href="/animes/{{this.id}}">Actualizar</a></td>
+			<td><button class="btn btn-danger" onclick="deleteAnime('{{this.id}}')">Eliminar</button></td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>
+
+<script>
+	let formAgregarAnime = document.getElementById("formAgregarAnime")
+
+	formAgregarAnime.addEventListener("submit", async (event) => {
+		event.preventDefault()
+		try {
+			const myHeaders = new Headers()
+			myHeaders.append("Content-Type", "application/json")
+
+			const raw = JSON.stringify({
+				"nombre": agregarNombre.value,
+				"genero": agregarGenero.value,
+				"year": agregarYear.value,
+				"autor": agregarAutor.value
+			})
+
+			let response = await fetch("/anime", {
+				method: "POST",
+				headers: myHeaders,
+				body: raw,
+				redirect: 'follow'
+			})
+
+			let data = await response.json()
+			if (data.code == 201) {
+				alert("Anime agreado con éxito.")
+				formAgregarAnime.reset()
+				location.reload()
+			} else {
+				throw new Error("Error al guardar los datos en la BD.")
+			}
+		} catch (error) {
+			alert(error.message)
+		}
+	})
+</script>

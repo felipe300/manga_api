@@ -5,13 +5,7 @@ const leerAnime = () => {
 	return new Promise(async (resolve, reject) => {
 		try {
 			let animes = await fs.readFile('./db/anime.json', 'utf8')
-			// resolve(JSON.parse(animes));
 			let formatAnimes = JSON.parse(animes)
-			// let objetos = Object.entries(formatAnimes).map((anime, index) => {
-			// 	let objeto = anime[1];
-			// 	objeto.id = anime[0];
-			// 	return objeto;
-			// });
 			resolve(formatAnimes)
 		} catch (error) {
 			reject('Error al leer archivo anime.json')
@@ -38,16 +32,16 @@ const agregarAnime = (nombre, genero, year, autor) => {
 		try {
 			let data = await leerAnime()
 			let nuevoAnime = {
+				id: uuid().slice(0, 8),
 				nombre,
 				genero,
 				year,
-				autor,
-				id: uuid().slice(0, 6),
+				autor
 			}
 			data.animes.push(nuevoAnime)
 			await fs.writeFile(
-				'./db/animetest.json',
-				JSON.stringify(data, null, 4),
+				'./db/anime.json',
+				JSON.stringify(data, null, 2),
 				'utf8'
 			)
 			resolve(
@@ -72,7 +66,7 @@ const actualizarAnime = (id, nombre, genero, year, autor) => {
 			animeEncontrado.autor = autor
 			await fs.writeFile(
 				'./db/anime.json',
-				JSON.stringify(data, null, 4),
+				JSON.stringify(data, null, 2),
 				'utf8'
 			)
 			resolve(`Anime ${animeEncontrado.nombre} actualizado con éxito`)
@@ -99,9 +93,5 @@ const borrarAnime = (id) => {
 		}
 	})
 }
-
-// buscarPorNombre('aKIRA')
-// 	.then((res) => console.log(res))
-// 	.catch((err) => console.log(err))
 
 module.exports = { leerAnime, buscarPorNombre, agregarAnime, actualizarAnime, borrarAnime }
