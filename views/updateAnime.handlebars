@@ -49,7 +49,7 @@
 			if (data.code == 200) {
 				alert("anime actualizado con éxito.")
 				formUpdateAnime.reset()
-				location.reload()
+				location.replace("/anime")
 			} else {
 				throw new Error("Error al actualizar los datos en la BD.")
 			}
